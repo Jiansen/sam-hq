@@ -57,9 +57,12 @@ def show_res_multi(masks, scores, input_point, input_label, input_box, filename,
 
 
 if __name__ == "__main__":
-    sam_checkpoint = "./pretrained_checkpoint/sam_hq_vit_l.pth"
-    model_type = "vit_l"
-    device = "cuda"
+    # sam_checkpoint = "./pretrained_checkpoint/sam_hq_vit_h.pth"
+    sam_checkpoint = "./pretrained_checkpoint/sam_vit_h_4b8939.pth"
+    model_type = "vit_h"
+    # device = "cuda"
+    device = "cpu"
+    # print("sam_model_registry[model_type]:  ",sam_model_registry[model_type])
     sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
     sam.to(device=device)
     predictor = SamPredictor(sam)
@@ -75,6 +78,8 @@ if __name__ == "__main__":
         # For quantiative evaluation on COCO/YTVOS/DAVIS/UVO/LVIS etc., we set hq_token_only = False
 
         image = cv2.imread('demo/input_imgs/example'+str(i)+'.png')
+        if image is None:
+            print(f"Failed to load the image. Please check the file path and file integrity: example{i}.png")
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         predictor.set_image(image)
 
